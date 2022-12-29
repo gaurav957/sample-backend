@@ -1,0 +1,18 @@
+import express from "express";
+import bodyParser from "body-parser";
+import * as authController from "./Controllers/AuthController.js";
+// import routes from "./routes";
+// var express = require("express");
+// var bodyParser = require("body-parser");
+var app = express();
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+// var routes = require("./routes");
+// app.use("/", routes);
+app.post("/auth/register", authController.register);
+app.post("/auth/login", authController.login);
+app.post("/auth/validate", authController.validate_token);
+app.post("/auth/verify", authController.verify);
+app.post("/auth/setPassword", authController.setPassword);
+// module.exports = app;
+export default app;
