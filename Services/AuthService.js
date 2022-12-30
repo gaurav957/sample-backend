@@ -83,13 +83,13 @@ export const Login = (body, callback) => {
         sessionUserAttributes,
         {
           onSuccess: (result) => {
-            debugger;
-            console.log("NEW PASSWORD COMPLETED: ");
+            // debugger;
+            callback("NEW PASSWORD COMPLETED: ");
             console.log(result);
           },
           onFailure: (err) => {
-            debugger;
-            console.log(err);
+            // debugger;
+            callback(err);
           },
         }
       );
