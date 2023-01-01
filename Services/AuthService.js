@@ -9,7 +9,12 @@ const poolData = {
   UserPoolId: "eu-west-2_BbQoMpDS7",
   ClientId: "6mk031vm134kdbvu3ca9vhujg",
 };
+// const poolData = {
+//   UserPoolId: "ap-south-1_H0AyV6k0O",
+//   ClientId: "7plqmkvuom271mf3bu0llret19",
+// };
 const pool_region = "eu-west-2";
+// const pool_region = "ap-south-1";
 const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
 export const Register = (body, callback) => {
   var name = body.name;
@@ -83,16 +88,35 @@ export const Login = (body, callback) => {
         sessionUserAttributes,
         {
           onSuccess: (result) => {
-            // debugger;
+            debugger;
             callback("NEW PASSWORD COMPLETED: ");
             console.log(result);
           },
           onFailure: (err) => {
-            // debugger;
+            debugger;
             callback(err);
           },
         }
       );
+    },
+    mfaSetup: function (challengeName, challengeParameters) {
+      debugger;
+      cognitoUser.associateSoftwareToken(this);
+    },
+    associateSecretCode: function (secretCode) {
+      debugger;
+      var challengeAnswer = prompt("Please input the TOTP code.", "");
+      cognitoUser.verifySoftwareToken(challengeAnswer, "My TOTP device", this);
+    },
+    selectMFAType: function (challengeName, challengeParameters) {
+      debugger;
+      var mfaType = prompt("Please select the MFA method.", ""); // valid values for mfaType is "SMS_MFA", "SOFTWARE_TOKEN_MFA"
+      cognitoUser.sendMFASelectionAnswer(mfaType, this);
+    },
+    totpRequired: function (secretCode) {
+      debugger;
+      var challengeAnswer = prompt("Please input the TOTP code.", "");
+      cognitoUser.sendMFACode(challengeAnswer, this, "SOFTWARE_TOKEN_MFA");
     },
   });
 };

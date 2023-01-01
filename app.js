@@ -1,10 +1,12 @@
 import express from "express";
 import bodyParser from "body-parser";
 import * as authController from "./Controllers/AuthController.js";
+import cors from "cors";
 // import routes from "./routes";
 // var express = require("express");
 // var bodyParser = require("body-parser");
 var app = express();
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 // var routes = require("./routes");
