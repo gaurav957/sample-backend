@@ -8,4 +8,5 @@ router.post("/auth/login", authController.login);
 router.post("/auth/validate", authController.validate_token);
 router.post("/auth/verify", authController.verify);
 router.post("/auth/setPassword", authController.setPassword);
+router.post("/auth/enableMFA", authController.enableMFA);
 // module.exports = router;

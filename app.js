@@ -16,5 +16,6 @@ app.post("/auth/login", authController.login);
 app.post("/auth/validate", authController.validate_token);
 app.post("/auth/verify", authController.verify);
 app.post("/auth/setPassword", authController.setPassword);
+app.post("/auth/enableMFA", authController.enableMFA);
 // module.exports = app;
 export default app;

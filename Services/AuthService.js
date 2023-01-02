@@ -82,10 +82,10 @@ export const Login = (body, callback) => {
       const newPassword = body.newPassword;
       // store userAttributes on global variable
       const sessionUserAttributes = userAttributes;
-
+      debugger;
       cognitoUser.completeNewPasswordChallenge(
         newPassword,
-        sessionUserAttributes,
+        {},
         {
           onSuccess: (result) => {
             debugger;
@@ -219,4 +219,32 @@ export const verify = (body, callback) => {
       cognitoUser.verifyAttribute("email", verificationCode, this);
     },
   });
+};
+
+export const enableMFA = (body, callback) => {
+  var userName = body.name;
+  var userData = {
+    Username: userName,
+    Pool: userPool,
+  };
+  var cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
+  var totpMfaSettings = {
+    PreferredMfa: true,
+    Enabled: true,
+  };
+
+  // Login({ name: body.name, password: body.password }, function () {
+  cognitoUser.setUserMfaPreference(
+    null,
+    totpMfaSettings,
+    function (err, result) {
+      debugger;
+      if (err) {
+        callback(err.message);
+        // alert(err.message || JSON.stringify(err));
+      }
+      callback(null, result);
+    }
+  );
+  // });
 };

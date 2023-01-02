@@ -38,3 +38,10 @@ export const setPassword = (req, res) => {
     res.send(status);
   });
 };
+
+export const enableMFA = (req, res) => {
+  const status = authService.enableMFA(req.body, function (err, result) {
+    if (err) res.send(err);
+    res.send(result);
+  });
+};
