@@ -223,6 +223,12 @@ export const verify = (body, callback) => {
 
 export const enableMFA = (body, callback) => {
   var userName = body.name;
+  var password = body.password;
+  var authenticationDetails = new AmazonCognitoIdentity.AuthenticationDetails({
+    Username: userName,
+    Password: password,
+  });
+  var userName = body.name;
   var userData = {
     Username: userName,
     Pool: userPool,
@@ -233,18 +239,53 @@ export const enableMFA = (body, callback) => {
     Enabled: true,
   };
 
-  // Login({ name: body.name, password: body.password }, function () {
-  cognitoUser.setUserMfaPreference(
-    null,
-    totpMfaSettings,
-    function (err, result) {
+  cognitoUser.authenticateUser(authenticationDetails, {
+    onSuccess: (result) => {
       debugger;
-      if (err) {
-        callback(err.message);
-        // alert(err.message || JSON.stringify(err));
+      console.log("User authenticated");
+      // cognitoUser.setUserMfaPreference(
+      //   null,
+      //   totpMfaSettings,
+      //   function (err, result) {
+      //     debugger;
+      //     if (err) {
+      //       callback(JSON.stringify(err));
+      //       // alert(err.message || JSON.stringify(err));
+      //     }
+      //     callback(null, result);
+      //   }
+      // );
+      var accesstoken = result.getAccessToken().getJwtToken();
+      try {
+        const result = cognitoUser.associateSoftwareToken({
+          onFailure: (error) => {
+            debugger;
+            console.error(error);
+          },
+          associateSecretCode: (code) => {
+            debugger;
+            console.debug(code);
+            cognitoUser.verifySoftwareToken("429663", "My TOTP device", {
+              onFailure: (error) => {
+                debugger;
+              },
+              onSuccess: (result) => {
+                debugger;
+              },
+            });
+          },
+        });
+      } catch (err) {
+        debugger;
       }
-      callback(null, result);
-    }
-  );
+    },
+    onFailure: (error) => {
+      debugger;
+      console.log("An error happened");
+    },
+  });
+
+  // Login({ name: body.name, password: body.password }, function () {
+
   // });
 };
